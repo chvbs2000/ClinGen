@@ -13,8 +13,10 @@ def load_data(data_access):
 	
 	current_time = date.today().strftime("-%Y-%m-%d")
 	file_name = "ClinGen-Gene-Disease-Summary{}.csv".format(str(current_time))	
-	#file_name = ".csv"
 	data_dir = os.path.join(data_access, file_name)
+
+	# check if the file exist
+	assert os.path.exists(data_dir), "input file '%s' does not exist" % data_dir
 
 	with open_anyfile(data_dir) as input_file:
 
