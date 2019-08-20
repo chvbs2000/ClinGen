@@ -9,11 +9,9 @@ from biothings.utils.dataload import dict_sweep, open_anyfile
 
 def load_data(data_access):
 
-	
-	
-	current_time = date.today().strftime("-%Y-%m-%d")
-	file_name = "ClinGen-Gene-Disease-Summary{}.csv".format(str(current_time))
-    #file_name = "ClinGen-Gene-Disease-Summary-2019-08-05.csv"
+	#current_time = date.today().strftime("-%Y-%m-%d")
+	#file_name = "ClinGen-Gene-Disease-Summary{}.csv".format(str(current_time))
+	file_name = "ClinGen-Gene-Disease-Summary-2019-08-05.csv"
 	data_dir = os.path.join(data_access, file_name)
 
 	# check if the file exist
@@ -37,9 +35,9 @@ def load_data(data_access):
 
 			gene = {}
 			gene['_id'] = row['GENE ID (HGNC)'] 
+			gene['gene_label'] = row['GENE SYMBOL']
 			gene['clingen'] = {}
-			key_list = ['GENE SYMBOL', 'DISEASE LABEL', 'DISEASE ID (MONDO)', 'SOP', 'CLASSIFICATION', 'ONLINE REPORT']
-			#print (row)
+			key_list = ['DISEASE LABEL', 'DISEASE ID (MONDO)', 'SOP', 'CLASSIFICATION', 'ONLINE REPORT']
 
 			for key in key_list:
 
@@ -56,7 +54,6 @@ def load_data(data_access):
 		for value in output.values():
 
 			if len(value) == 1:
-				
 				yield value[0]
 
 			else:
@@ -64,14 +61,14 @@ def load_data(data_access):
 					'_id':value[0]['_id'],
 					'clingen': [v['clingen'] for v in value]
 				}
-				
+
 	
 
 if __name__ == '__main__':
 
 	access = "/Users/chvbs2000/Desktop/biothing/rotation_project"
-	data = load_data(access)
-	print (type(data))
+	load_data(access)
+	
 
 
 
