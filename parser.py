@@ -54,7 +54,7 @@ def load_data(data_access):
 
 			if len(value) == 1:
 				
-				yield v
+				yield value
 
 			else:
 				yield {
