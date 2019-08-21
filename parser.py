@@ -9,9 +9,9 @@ from biothings.utils.dataload import dict_sweep, open_anyfile
 
 def load_data(data_access):
 
-	current_time = date.today().strftime("-%Y-%m-%d")
-	file_name = "ClinGen-Gene-Disease-Summary{}.csv".format(str(current_time))
-	#file_name = "ClinGen-Gene-Disease-Summary-2019-08-05.csv"
+	#current_time = date.today().strftime("-%Y-%m-%d")
+	#file_name = "ClinGen-Gene-Disease-Summary{}.csv".format(str(current_time))
+	file_name = "ClinGen-Gene-Disease-Summary-2019-08-05.csv"
 	data_dir = os.path.join(data_access, file_name)
 
 	# check if the file exist
@@ -27,7 +27,6 @@ def load_data(data_access):
 		reader = csv.DictReader(set(list(input_file)), fieldnames = header, delimiter = ",")
 		output = defaultdict(list)
 
-
 		for row in reader:
 
 			if not 'GENE ID (HGNC)' in row or not row['GENE ID (HGNC)']:
@@ -41,8 +40,14 @@ def load_data(data_access):
 
 			for key in key_list:
 
-				old_key = key
-				complete_key = key.lower().replace(' ', '_')
+				if key == 'DISEASE ID (MONDO)':
+					old_key = key
+					complete_key = 'disease_id_mondo'
+
+				else:
+					old_key = key
+					complete_key = key.lower().replace(' ', '_')
+
 				gene['clingen'][complete_key] = row.get(old_key, None)
 				
 			
