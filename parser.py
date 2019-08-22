@@ -39,7 +39,7 @@ def load_data(data_access):
 			if not 'GENE ID (HGNC)' in row or not row['GENE ID (HGNC)']:
 				continue
 
-			hgnc_id = int(row['GENE ID (HGNC)'].split(':')[1])
+			hgnc_id = row['GENE ID (HGNC)'].split(':')[1]
 
 			# retrieve ENTRNZ ID from mygene.info based on HGNC ID
 			headers = {'content-type':'application/x-www-form-urlencoded'}
