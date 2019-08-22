@@ -32,7 +32,8 @@ def load_data(data_access):
 		reader = csv.DictReader(set(list(input_file)), fieldnames = header, delimiter = ",")
 		output = defaultdict(list)
 
-		hgnc_dict = {}
+		#hgnc_dict = {}
+		hgnc_ls = []
 
 		for row in reader:
 
@@ -40,6 +41,7 @@ def load_data(data_access):
 				continue
 
 			hgnc_id = row['GENE ID (HGNC)'].split(':')[1]
+			hgnc_ls.append(hgnc_id)
 
 			# retrieve ENTRNZ ID from mygene.info based on HGNC ID
 			headers = {'content-type':'application/x-www-form-urlencoded'}
@@ -67,9 +69,11 @@ def load_data(data_access):
 					old_key = key
 					complete_key = key.lower().replace(' ', '_')
 
-				gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).lower()
-				
-			
+				if key == 'DISEASE ID (MONDO)':
+					gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).lower().split('_')[1]
+				else:
+					gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).lower()
+	
 			gene = dict_sweep(gene, vals = ['','null','N/A',None, [],{}])
 			output[gene['_id']].append(gene)
 			
