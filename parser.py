@@ -14,9 +14,9 @@ import json
 #										]}
 def load_data(data_access):
 
-	#current_time = date.today().strftime("-%Y-%m-%d")
-	#file_name = "ClinGen-Gene-Disease-Summary{}.csv".format(str(current_time))
-	file_name = "ClinGen-Gene-Disease-Summary-2019-08-05.csv"
+	current_time = date.today().strftime("-%Y-%m-%d")
+	file_name = "ClinGen-Gene-Disease-Summary{}.csv".format(str(current_time))
+	#file_name = "ClinGen-Gene-Disease-Summary-2019-08-05.csv"
 	data_dir = os.path.join(data_access, file_name)
 
 	# check if the file exist
