@@ -4,14 +4,19 @@ from collections import defaultdict
 import csv
 from datetime import date
 from biothings.utils.dataload import dict_sweep, open_anyfile
+import requests
+import json
 
 
-
+# 加一層:clinial_validity
+# clingen { clinical_validity:[
+#								{......}
+#										]}
 def load_data(data_access):
 
-	current_time = date.today().strftime("-%Y-%m-%d")
-	file_name = "ClinGen-Gene-Disease-Summary{}.csv".format(str(current_time))
-	#file_name = "ClinGen-Gene-Disease-Summary-2019-08-05.csv"
+	#current_time = date.today().strftime("-%Y-%m-%d")
+	#file_name = "ClinGen-Gene-Disease-Summary{}.csv".format(str(current_time))
+	file_name = "ClinGen-Gene-Disease-Summary-2019-08-05.csv"
 	data_dir = os.path.join(data_access, file_name)
 
 	# check if the file exist
@@ -27,28 +32,42 @@ def load_data(data_access):
 		reader = csv.DictReader(set(list(input_file)), fieldnames = header, delimiter = ",")
 		output = defaultdict(list)
 
+		hgnc_dict = {}
+
 		for row in reader:
 
 			if not 'GENE ID (HGNC)' in row or not row['GENE ID (HGNC)']:
 				continue
 
+			hgnc_id = row['GENE ID (HGNC)'].split(':')[1]
+
+			# retrieve ENTRNZ ID from mygene.info based on HGNC ID
+			headers = {'content-type':'application/x-www-form-urlencoded'}
+			params = 'q=hgnc_id&scopes=HGNC&fields=_id'
+			res = requests.post('http://mygene.info/v3/query', data=params, headers=headers)
+			json_data = json.loads(res.text)
+			entrez_id = json_data[0]['_id']
+
+			if hgnc_id not in hgnc_dict:
+				hgnc_dict[hgnc_id] = entrez_id
+
 			gene = {}
-			gene['_id'] = row['GENE ID (HGNC)'] 
-			gene['gene_symbol'] = row['GENE SYMBOL']
+			gene['_id'] = entrez_id 
 			gene['clingen'] = {}
+			gene['clingen']['clinical_validity'] = {}
 			key_list = ['DISEASE LABEL', 'DISEASE ID (MONDO)', 'SOP', 'CLASSIFICATION', 'ONLINE REPORT']
 
 			for key in key_list:
 
 				if key == 'DISEASE ID (MONDO)':
 					old_key = key
-					complete_key = 'disease_id_mondo'
+					complete_key = 'mondo'
 
 				else:
 					old_key = key
 					complete_key = key.lower().replace(' ', '_')
 
-				gene['clingen'][complete_key] = row.get(old_key, None)
+				gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).lower()
 				
 			
 			gene = dict_sweep(gene, vals = ['','null','N/A',None, [],{}])
@@ -65,8 +84,7 @@ def load_data(data_access):
 			else:
 				yield {
 					'_id':value[0]['_id'],
-					'gene_symbol': value[0]['gene_symbol'],
-					'clingen': [v['clingen'] for v in value]
+					'clingen': [v['clingen']['clinical_validity'] for v in value]
 				}
 
 
