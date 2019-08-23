@@ -49,10 +49,7 @@ def load_data(data_access):
 			res = requests.post('http://mygene.info/v3/query', data=params, headers=headers)
 			json_data = json.loads(res.text)
 			entrez_id = json_data[0]['_id']
-
-			if hgnc_id not in hgnc_dict:
-				hgnc_dict[hgnc_id] = entrez_id
-
+			
 			gene = {}
 			gene['_id'] = entrez_id 
 			gene['clingen'] = {}
