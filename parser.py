@@ -49,7 +49,7 @@ def load_data(data_access):
 			res = requests.post('http://mygene.info/v3/query', data=params, headers=headers)
 			json_data = json.loads(res.text)
 			entrez_id = json_data[0]['_id']
-			
+
 			gene = {}
 			gene['_id'] = entrez_id 
 			gene['clingen'] = {}
@@ -66,10 +66,7 @@ def load_data(data_access):
 					old_key = key
 					complete_key = key.lower().replace(' ', '_')
 
-				if key == 'DISEASE ID (MONDO)':
-					gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).lower().split('_')[1]
-				else:
-					gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).lower()
+				gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).lower()
 	
 			gene = dict_sweep(gene, vals = ['','null','N/A',None, [],{}])
 			output[gene['_id']].append(gene)
@@ -85,17 +82,17 @@ def load_data(data_access):
 			else:
 				yield {
 					'_id':value[0]['_id'],
-					'clingen': [v['clingen']['clinical_validity'] for v in value]
+					'clingen': [v['clingen'] for v in value]
 				}
 
-
+"""
 
 if __name__ == '__main__':
 
 	access = "/Users/chvbs2000/Desktop/biothing/rotation_project"
 	load_data(access)
 	
-	
+"""
 
 
 
