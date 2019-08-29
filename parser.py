@@ -14,6 +14,10 @@ import json
 #										]}
 # use mygene.client to request url for id conversion (hgnc id -> entrenz id)
 
+# function: data_try, id_conversion, load_data
+
+
+
 def load_data(data_access):
 
 	current_time = date.today().strftime("-%Y-%m-%d")
@@ -49,7 +53,7 @@ def load_data(data_access):
 
 			# store every gene's information into a nested dictionary 
 			gene = {}
-			gene['_id'] = entrez_id 
+			gene['_id'] = hgnc_id
 			gene['clingen'] = {}
 			gene['clingen']['clinical_validity'] = {}
 			key_list = ['DISEASE LABEL', 'DISEASE ID (MONDO)', 'SOP', 'CLASSIFICATION', 'ONLINE REPORT']
