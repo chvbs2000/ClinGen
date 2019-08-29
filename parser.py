@@ -94,7 +94,7 @@ def load_data(data_access):
 				final_output.update({
 					'_id':value[0]['_id'],
 					'clingen': {
-						'clinical_validity':[v['clinical_validity']for v in value]
+						'clinical_validity':[v['clingen']['clinical_validity']for v in value]
 					}
 				})
 
