@@ -85,9 +85,9 @@ def load_data(data_access):
 			# genes without duplicate
 			if len(value) == 1:
 				final_output.update(value[0])
-				key = value[0]['_id']
+				key = final_output['_id']
 				final_output['_id'] = entrenz_hgnc_dict[key]
-				yield value[0]
+				yield final_output
 
 			# genes in duplicate
 			else:
