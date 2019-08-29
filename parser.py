@@ -28,6 +28,7 @@ def load_data(data_access):
 	# check if the file exist
 	assert os.path.exists(data_dir), "input file '%s' does not exist" % data_dir
 
+	# read file
 	with open_anyfile(data_dir) as input_file:
 
 		for _ in range(4):
@@ -81,40 +82,36 @@ def load_data(data_access):
 
 			final_output = {}
 
+			# genes without duplicate
 			if len(value) == 1:
 				final_output.update(value[0])
-				key = final_output['_id']
+				key = value[0]['_id']
 				final_output['_id'] = entrenz_hgnc_dict[key]
-				yield final_output
-
-				"""
 				yield value[0]
-				"""
 
+			# genes in duplicate
 			else:
 				final_output.update({
 					'_id':value[0]['_id'],
-					'clingen': [v['clingen']['clinical_validity'] for v in value]
+					'clingen': {
+						'clinical_validity':[v['clingen']for v in value]
+					}
 				})
+
 				key = final_output['_id']
 				final_output['_id'] = entrenz_hgnc_dict[key]
 				yield final_output
-				"""
-				yield {
-					'_id':value[0]['_id'],
-					'clingen': [v['clingen'] for v in value]
-				}
-				"""
 
-# convert HGNC ID to ENTRENZ GENE ID
+
+# Function hgnc2entrenz converts HGNC_ID to ENTREN_ID
 def hgnc2entrenz(hgnc_list):
 
 	"""
-	output:
-	dicionary[HGNC_ID] = Entrenz_ID
+	return: dicionary[HGNC_ID] = ENTREN_ID
 
 	"""
 
+	# romve duplicate HGNC gene
 	hgnc_set = list(map(int, set(hgnc_list)))
 
 	# retrieve ENTRNZ ID from mygene.info based on HGNC ID
@@ -123,21 +120,13 @@ def hgnc2entrenz(hgnc_list):
 	res = requests.post('http://mygene.info/v3/query', data=params, headers=headers)
 	json_data = json.loads(res.text)
 	
+	# build ID conversion dictionary
 	entrenz_dict = {}
 	for i in range(len(json_data)):
 		entrenz_dict[json_data[i]['query']] = json_data[i]['_id']
 
 	return entrenz_dict
 
-
-"""
-
-if __name__ == '__main__':
-
-	access = "/Users/chvbs2000/Desktop/biothing/rotation_project"
-	load_data(access)
-	
-"""
 
 
 
