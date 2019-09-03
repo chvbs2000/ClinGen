@@ -1,8 +1,8 @@
 {
 	"version": "0.2",
 	"__metadata__":{
-		"license_url":"https://clinicalgenome.org/docs/?doc-type=policies-position-statements",
-		"licence":"",
+		"license_url":"https://www.clinicalgenome.org/docs/terms-of-use/",
+		"licence":"CC0 1.0 Universal",
 		"url":"https://search.clinicalgenome.org/kb/gene-validity"
 	},
 	"dumper": {
