@@ -57,12 +57,12 @@ def load_data(data_access):
                 if key == 'DISEASE ID (MONDO)':
                     old_key = key
                     complete_key = 'mondo'
+                    gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).replace("_",":")
 
                 else:
                     old_key = key
-                    complete_key = key.lower().replace(' ', '_') #convert to lower case
-
-                gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).lower()
+                    complete_key = key.lower().replace(' ', '_') # key to lower case
+                    gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).lower() # value to lower case
             
             gene = dict_sweep(gene, vals = ['','null','N/A',None, [],{}])
             output[gene['_id']].append(gene)
