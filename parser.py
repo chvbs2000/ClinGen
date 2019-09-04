@@ -140,7 +140,7 @@ def hgnc2entrez(data_dict_list):
 
     for element in data_dict_list:
         #final_dict = {}
-        key = element['_id'].split(':')[1]
+        key = element['_id']
         element['_id'] = entrez_hgnc_dict[key]
         final_output.append(element)
 
