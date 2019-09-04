@@ -45,7 +45,7 @@ def parse_data(data_access):
             if not 'GENE ID (HGNC)' in row or not row['GENE ID (HGNC)']:
                 continue
             # store HGNC gen ID for conversion
-            #hgnc_id = row['GENE ID (HGNC)'].split(':')[1]
+            hgnc_id = row['GENE ID (HGNC)'].split(':')[1]
             #hgnc_list.append(hgnc_id)
 
             # store every gene's information into a nested dictionary 
@@ -121,7 +121,7 @@ def hgnc2entrez(data_dict_list):
     hgnc_list = []
 
     for element in data_dict_list:
-        hgnc_list.append(element['_id'].split(':')[1])
+        hgnc_list.append(element['_id'])
     # romve duplicate HGNC gene
     hgnc_set = list(map(int, set(hgnc_list)))
 
@@ -139,7 +139,7 @@ def hgnc2entrez(data_dict_list):
     final_output = []
 
     for element in data_dict_list:
-        final_dict = {}
+        #final_dict = {}
         key = element['_id'].split(':')[1]
         element['_id'] = entrez_hgnc_dict[key]
         final_output.append(element)
