@@ -106,7 +106,7 @@ def parse_data(data_access):
                 final_output['_id'] = entrez_hgnc_dict[key]
                 yield final_output
                 """
-                return hgnc2entrez(temp_output)
+    return hgnc2entrez(temp_output)
 
 def load_data(data_access):
 
