@@ -13,9 +13,18 @@ import json
 #   1. data_entry (yield documents)
 #   2. id_conversion
 
+def load_data(data_access):
+    """
+    return documents
+    """
+
+    docs = parse_data(data_access)
+    for doc in docs:
+        yield doc
+
 def parse_data(data_access):
     """
-    return: dictionary
+    return: a list containing a nested dinctionary with ENTREZ ID as gene ID  
     """
 
     current_time = date.today().strftime("-%Y-%m-%d")
@@ -58,6 +67,7 @@ def parse_data(data_access):
             # for each key, store the value into the gene dictionary 
             for key in key_list:
 
+                # disease value: "MONDO_ID" -> "MONDO:ID"
                 if key == 'DISEASE ID (MONDO)':
                     old_key = key
                     complete_key = 'mondo'
@@ -79,12 +89,6 @@ def parse_data(data_access):
             # genes without duplicate
             if len(value) == 1:
                 temp_output.append(value[0])
-                """
-                final_output.update(value[0])
-                key = final_output['_id']
-                final_output['_id'] = entrez_hgnc_dict[key]
-                yield final_output
-                """
 
             # genes in duplicate
             else:
@@ -94,34 +98,20 @@ def parse_data(data_access):
                         'clinical_validity':[v['clingen']['clinical_validity']for v in value]
                         }
                     })
-                """
-                final_output.update({
-                    '_id':value[0]['_id'],
-                    'clingen': {
-                        'clinical_validity':[v['clingen']['clinical_validity']for v in value]
-                    }
-                })
 
-                key = final_output['_id']
-                final_output['_id'] = entrez_hgnc_dict[key]
-                yield final_output
-                """
     return hgnc2entrez(temp_output)
 
-def load_data(data_access):
-
-    docs = parse_data(data_access)
-    for doc in docs:
-        yield doc
-
-
-# Function hgnc2entrenz converts HGNC_ID to ENTREN_ID
 def hgnc2entrez(data_dict_list):
-
+    """
+    converts HGNC_ID to ENTREN_ID
+    """
+    
     hgnc_list = []
 
+    # build a list containing all HGNC ID
     for element in data_dict_list:
         hgnc_list.append(element['_id'])
+
     # romve duplicate HGNC gene
     hgnc_set = list(map(int, set(hgnc_list)))
 
@@ -138,8 +128,9 @@ def hgnc2entrez(data_dict_list):
 
     final_output = []
 
+    # store updated gene dictionary in final_output list
     for element in data_dict_list:
-        #final_dict = {}
+        # convert HGNC ID to ENTREZ ID
         key = element['_id']
         element['_id'] = entrez_hgnc_dict[key]
         final_output.append(element)
