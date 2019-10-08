@@ -1,7 +1,7 @@
 from datetime import date
 
 
-def version():
+def get_release():
 	"""
 	return the most updated version
 	"""
