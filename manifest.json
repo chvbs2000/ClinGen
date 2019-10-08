@@ -1,7 +1,5 @@
 {
-	"version":{
-		"version":"get_release"
-	},
+	"version":"0.2",
 	"__metadata__":{
 		"license_url":"https://www.clinicalgenome.org/docs/terms-of-use/",
 		"licence":"CC0 1.0 Universal",
