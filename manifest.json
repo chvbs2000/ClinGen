@@ -7,6 +7,7 @@
 	},
 	"dumper": {
 		"data_url":"https://search.clinicalgenome.org/kb/gene-validity.csv",
+		"version":"get_release",
 		"uncompress": false
 	},
 	"uploader":{
@@ -14,3 +15,6 @@
 		"on_duplicates": "ignore"
 	}
 }
+
+
+
