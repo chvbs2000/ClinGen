@@ -62,7 +62,7 @@ def parse_data(data_access):
             gene['_id'] = hgnc_id
             gene['clingen'] = {}
             gene['clingen']['clinical_validity'] = {}
-            key_list = ['DISEASE LABEL', 'DISEASE ID (MONDO)', 'SOP', 'CLASSIFICATION', 'ONLINE REPORT', 'CLASSIFICATION DATE']
+            key_list = ['DISEASE LABEL', 'DISEASE ID (MONDO)', 'SOP', 'CLASSIFICATION', 'ONLINE REPORT']
 
             # for each key, store the value into the gene dictionary 
             for key in key_list:
