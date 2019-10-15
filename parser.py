@@ -12,6 +12,7 @@ import json
 # load_data:
 #   1. data_entry (yield documents)
 #   2. id_conversion
+# classification value to lower case
 
 def load_data(data_access):
     """
@@ -29,7 +30,6 @@ def parse_data(data_access):
 
     current_time = date.today().strftime("-%Y-%m-%d")
     file_name = "ClinGen-Gene-Disease-Summary{}.csv".format(str(current_time))
-    #file_name = "ClinGen-Gene-Disease-Summary-2019-08-05.csv"
     data_dir = os.path.join(data_access, file_name)
 
     # check if the file exist
@@ -62,7 +62,7 @@ def parse_data(data_access):
             gene['_id'] = hgnc_id
             gene['clingen'] = {}
             gene['clingen']['clinical_validity'] = {}
-            key_list = ['DISEASE LABEL', 'DISEASE ID (MONDO)', 'SOP', 'CLASSIFICATION', 'ONLINE REPORT']
+            key_list = ['DISEASE LABEL', 'DISEASE ID (MONDO)', 'SOP', 'CLASSIFICATION', 'ONLINE REPORT', 'CLASSIFICATION DATE']
 
             # for each key, store the value into the gene dictionary 
             for key in key_list:
@@ -72,11 +72,16 @@ def parse_data(data_access):
                     old_key = key
                     complete_key = 'mondo'
                     gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).replace("_",":")
+                
+                elif key == 'CLASSIFICATION':
+                    old_key = key
+                    complete_key = key.lower().replace(' ', '_') # key to lower case
+                    gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).lower() # value to lower case
 
                 else:
                     old_key = key
                     complete_key = key.lower().replace(' ', '_') # key to lower case
-                    gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None).lower() # value to lower case
+                    gene['clingen']['clinical_validity'][complete_key] = row.get(old_key, None)
             
             gene = dict_sweep(gene, vals = ['','null','N/A',None, [],{}])
             output[gene['_id']].append(gene)
